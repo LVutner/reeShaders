@@ -69,6 +69,7 @@ void lv_tinyclarity_generate_layers(uint3 DTid : SV_DispatchThreadID, uint3 GTid
 	int2 base_coord = Gid.xy * 16 - 4;	
 
 	//prefetch luma + guide into LDS
+	//better than multipasses + more rts? i doubt. its cool to put everything into two passes tho
 	for(uint i = Tid; i < 576; i += 256)
 	{
 		int2 sample_coord = base_coord + uint2(i % 24, i / 24);
@@ -171,7 +172,7 @@ technique TinyClarity
 	ui_tooltip =
 	"========================  \n"
 	"      TinyClarity   	   \n"
-	"    I can clearly!!!      \n"
+	"     brain aneurysm       \n"
 	"========================  \n";
 >
 {
