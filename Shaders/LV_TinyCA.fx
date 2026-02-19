@@ -19,25 +19,21 @@
 
 #include "ReShade.fxh"
 
-uniform int TINYCA_INT <
-	ui_type = "combo";
-    ui_label = "Intensity";
-	ui_items = "Subtle\0Medium\0Annoying\0";
-> = 1;
-
-static const float2 mag_coeffs[3] = 
-{
-	float2(0.9966, 0.9980),
-	float2(0.9922, 0.9953),
-	float2(0.9868, 0.9921)
-};
+uniform float TINYCA_INT <
+	ui_type = "slider";
+	ui_min = 0.0; 
+	ui_max = 1.0;
+	ui_tooltip = "Intensity";
+> = 0.125;
 
 float4 lv_tinyca(float4 hpos : SV_Position, float2 texcoord : TEXCOORD) : SV_Target
 {
 	float4 center = tex2Dlod(ReShade::BackBuffer, float4(texcoord, 0.0, 0.0));
 
+	const float2 magnification_coeff = 1.0 + float2(-0.0132, -0.0079) * TINYCA_INT;
+
     float2 from_center = texcoord - 0.5;
-    float4 rg_shift = from_center.xyxy * mag_coeffs[TINYCA_INT].xxyy + 0.5;
+    float4 rg_shift = from_center.xyxy * magnification_coeff.xxyy + 0.5;
 
     center.x = tex2Dlod(ReShade::BackBuffer, float4(rg_shift.xy, 0.0, 0.0)).x;
     center.y = tex2Dlod(ReShade::BackBuffer, float4(rg_shift.zw, 0.0, 0.0)).y;
